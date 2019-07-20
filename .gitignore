@@ -1,0 +1,17 @@
+
+*.pyc
+
+model/*.*
+!model/.gitkeep
+
+data/annotations/*.*
+!data/annotations/.gitkeep
+
+data/new_jpeg_images/*.*
+!data/new_jpeg_images/.gitkeep
+
+data/new_jpeg_tarball_extract/*.*
+!data/new_jpeg_tarball_extract/.gitkeep
+
+data/new_jpeg_tarballs/*.*
+!data/new_jpeg_tarballs/.gitkeep
