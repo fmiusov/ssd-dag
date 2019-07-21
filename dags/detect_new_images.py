@@ -41,8 +41,10 @@ default_args = {
     's3_model': 's3://sagemaker-us-east-1-366734301438/models-trained/mobilenet/cfa_prod/20190711_hand_products/',
     # local model location,
     'model_path': '/home/jay/projects/ssd-dag/model/',
-    # model name
-    'model_name': ''
+    # ssd project loaction,
+    'project_path': '/home/jay/projects/ssd-dag/',
+    # annotations location,
+    'unver_annotations_location': '/home/jay/projects/ssd-dag/data/unverified_annotations/'
 }
 
 
@@ -54,9 +56,10 @@ dag = DAG(
     description='generate cfa product detection annotations from new images'
 )
 
+
 # -- task --
 # get the new image tarballs from S3
-pull_new_jpeg_tarballs = BashOperator(
+pull_s3 = BashOperator(
     task_id='pull_s3',
     bash_command="aws s3 cp {{params.source}} {{params.dest}} --exclude {{params.exc}} --include {{params.inc}} --recursive",
     params={ 'source': default_args['s3_new_jpeg_tarballs'], 'dest': default_args["new_jpeg_tarballs"], 'exc': "*.*", 'inc':"*.tar.gz"},
@@ -105,12 +108,27 @@ pull_model = BashOperator(
 )
 
 # -- task -- 
-# get
-# python code/training/detect.py --image_dir ${LOCAL_NEW_IMAGES} --model_name 'tf_lite'\
-#	 --model_path ${LOCAL_MODEL_DIR}output_tflite_graph.tflite --label_map_path ${LOCAL_LABEL_MAP} \
-#	 --display no --annotation_dir ${LOCAL_NEW_UNVERIFIED_ANNOTATIONS}
+# run model
+#  - images are in place
+#  - model & label map in place
+# use a script ssd-dag/task/detect.sh
+#
+tasks_path = os.path.join(default_args['project_path'], "tasks")  # <project_path>/tasks
+# note the env variable - virtualenvwrapper needs this, won't hurt if you don't use it
+template_detect = """
+cd {{params.tasks_path}}
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python   
+./detect.sh {{params.images_path}} {{params.annotations}}
+"""
+run_model = BashOperator(
+    task_id='run_model',
+    bash_command=template_detect,
+    params={'tasks_path': tasks_path, 'images_path' : default_args['new_jpeg_images'],
+    'annotations': default_args['unver_annotations_location']},
+    dag=dag
+)
 
 
 
 # Assemble the DAG
-pull_new_jpeg_tarballs >> extract_tarballs >> move_images >> pull_model
+pull_s3 >> extract_tarballs >> move_images >> pull_model >>  run_model

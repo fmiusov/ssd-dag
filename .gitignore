@@ -7,6 +7,9 @@ model/*.*
 data/annotations/*.*
 !data/annotations/.gitkeep
 
+data/unverified_annotations/*.*
+!/data/unverified_annotations/.gitkeep
+
 data/new_jpeg_images/*.*
 !data/new_jpeg_images/.gitkeep
 

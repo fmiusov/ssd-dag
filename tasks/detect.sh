@@ -1,4 +1,14 @@
-LOCAL_NEW_IMAGES='../data/new_jpeg_images'
+#!/bin/bash
+
+#
+# Script to run the detection process
+# 
+
+# TODO - use a variable for virtualenv type [conda, vew, virtualenv]
+# this script is currently set up for vew (virtualenvwrapper)
+
+
+LOCAL_NEW_IMAGES=$1   # '../data/new_jpeg_images'
 MODEL_NAME='tf_lite'
 MODEL_PATH='../model'
 MODEL_NAME='tf_lite'
@@ -7,7 +17,7 @@ MODEL_FILENAME='output_tflite_graph.tflite'
 MODEL_FULL_PATH='../model/output_tflite_graph.tflite'
 LABEL_MAP_FILENAME='cfa_prod_label_map.pbtext'
 LABEL_MAP_FULL_PATH='../model/cfa_prod_label_map.pbtxt'
-ANNOTATION_PATH='../data/annotations'
+ANNOTATION_PATH=$2    # '../data/unverified_annotations'
 
 WORKON_HOME=~/.virtualenvs
 . /usr/local/bin/virtualenvwrapper.sh
