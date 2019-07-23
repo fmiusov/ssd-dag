@@ -24,3 +24,6 @@ data/new_jpeg_tarballs/*.*
 
 data/tfrecords/*.*
 !data/tfrecords/.gitkeep
+
+code/ckpt/*.*
+!code/ckpt/.gitkeep
