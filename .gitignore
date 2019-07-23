@@ -2,6 +2,8 @@
 *.pyc
 .ipynb_checkpoints/
 
+*.tar.gz
+
 model/*.*
 !model/.gitkeep
 
@@ -19,3 +21,6 @@ data/new_jpeg_tarball_extract/*.*
 
 data/new_jpeg_tarballs/*.*
 !data/new_jpeg_tarballs/.gitkeep
+
+data/tfrecords/*.*
+!data/tfrecords/.gitkeep
