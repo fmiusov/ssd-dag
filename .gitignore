@@ -27,3 +27,6 @@ data/tfrecords/*.*
 
 code/ckpt/*.*
 !code/ckpt/.gitkeep
+
+code/tfrecords/*.*
+!code/tfrecords/.gitkeep

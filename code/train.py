@@ -23,11 +23,10 @@ from absl import flags
 import tensorflow as tf
 
 from object_detection import model_hparams
-from object_detection import model_lib
+# from object_detection import model_lib
 
-flags.DEFINE_string(
-    'model_dir', None, 'Path to output model directory '
-    'where event and checkpoint files will be written.')
+flags.DEFINE_string('output_dir', None, 'Path to output model directory '
+                    'where event and checkpoint files will be written.')
 flags.DEFINE_string('pipeline_config_path', None, 'Path to pipeline config '
                     'file.')
 flags.DEFINE_integer('num_train_steps', None, 'Number of train steps.')
@@ -48,7 +47,7 @@ flags.DEFINE_string(
 flags.DEFINE_string(
     'checkpoint_dir', None, 'Path to directory holding a checkpoint.  If '
     '`checkpoint_dir` is provided, this binary operates in eval-only mode, '
-    'writing resulting metrics to `model_dir`.')
+    'writing resulting metrics to `output_dir`.')
 flags.DEFINE_boolean(
     'run_once', False, 'If running in eval-only mode, whether to run just '
     'one round of eval vs running continuously (default).'
@@ -57,9 +56,10 @@ FLAGS = flags.FLAGS
 
 
 def main(unused_argv):
-  flags.mark_flag_as_required('model_dir')
+  flags.mark_flag_as_required('output_dir')
   flags.mark_flag_as_required('pipeline_config_path')
-  config = tf.estimator.RunConfig(model_dir=FLAGS.model_dir)
+  print("FLAGS:",FLAGS.output_dir)
+  config = tf.estimator.RunConfig(output_dir=FLAGS.output_dir)
   print ("*J* pipeline.config:", FLAGS.pipeline_config_path)
   
   # Creates `Estimator`, input functions, and steps
