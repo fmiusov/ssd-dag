@@ -15,7 +15,8 @@ S3_TFRECORDS_PATH="s3://cfaanalyticsresearch-sagemaker/datasets/cfa_products/tfr
 TFRECORDS_TARBALL="20190718_tfrecords.tar.gz"
 
 S3_MODEL_PATH="s3://cfaanalyticsresearch-sagemaker/trained-models/tensorflow_mobilenet/"
-MODEL_FOLDER="20190718_cfa_prod_mobilenet_v1_ssd300/"
+BASE_MODEL_FOLDER="20180718_coco14_mobilenet_v1_ssd300_quantized"
+CFA_MODEL_FOLDER="20190718_cfa_prod_mobilenet_v1_ssd300/"
 
 cd $HOME/projects/ssd-dag/code
 
@@ -27,6 +28,7 @@ aws s3 cp ${S3_TFRECORDS_PATH}${TFRECORDS_TARBALL} tfrecords
 tar -xvf tfrecords/${TFRECORDS_TARBALL} --strip=1 -C tfrecords
 rm tfrecords/${TFRECORDS_TARBALL}
 
-# --- model ---
-echo ${S3_MODEL_PATH}${MODEL_FOLDER}
-aws s3 cp ${S3_MODEL_PATH}${MODEL_FOLDER} model --recursive
+# --- ckpt (checkpoint) that you are training on TOP OF - aka xfer learning  ---
+rm ckpt/*.*
+echo ${S3_MODEL_PATH}${BASE_MODEL_FOLDER}
+aws s3 cp ${S3_MODEL_PATH}${BASE_MODEL_FOLDER} ckpt --recursive
