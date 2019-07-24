@@ -27,6 +27,10 @@ data/tfrecords/*.*
 
 code/ckpt/*.*
 !code/ckpt/.gitkeep
+code/ckpt/checkpoint
+code/ckpt/eval_0/
+code/ckpt/export/
 
 code/tfrecords/*.*
 !code/tfrecords/.gitkeep
+
