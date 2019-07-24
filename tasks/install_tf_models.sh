@@ -7,16 +7,23 @@
 #
 cd ../code
 # clone the repo into code/models
+echo "--- git clone ---"
 git clone https://github.com/tensorflow/models.git
 
 # get the protobuf compiler
 # ref: https://developers.google.com/protocol-buffers/docs/pythontutorial
+echo "--- get the protobuf compiler ---"
 wget -O protobuf.zip https://github.com/google/protobuf/releases/download/v3.0.0/protoc-3.0.0-linux-x86_64.zip
 unzip protobuf.zip
 # compile the proto
+echo "--- compile protobufs ---"
 ./bin/protoc object_detection/protos/*.proto --python_out=.
 
 # clean up
+echo "--- clean up ---"
 rm protobuf.zip
 rm -r bin
+rm include -r
+
+echo "--- done! ---"
 
