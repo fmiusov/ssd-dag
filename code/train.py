@@ -20,7 +20,15 @@ from __future__ import print_function
 
 from absl import flags
 
+import os
+import sys
 import tensorflow as tf
+
+# without this PATH append
+# it won't find nets - in the /slim directory
+cwd = os.getcwd()
+slim = os.path.join(cwd, 'models/research/slim')
+sys.path.append(slim)
 
 from object_detection import model_hparams
 from object_detection import model_lib
@@ -58,10 +66,8 @@ def main(unused_argv):
   flags.mark_flag_as_required('pipeline_config_path')
 
   config = tf.estimator.RunConfig(model_dir=FLAGS.model_dir)
-  print ("*J* pipeline.config:", FLAGS.pipeline_config_path)
   
   # Creates `Estimator`, input functions, and steps
-  print ("*J*", config)
   train_and_eval_dict = model_lib.create_estimator_and_inputs(
       run_config=config,
       hparams=model_hparams.create_hparams(FLAGS.hparams_overrides),
