@@ -60,7 +60,7 @@ flags.DEFINE_boolean('run_once', False, 'If running in eval-only mode, whether t
 flags.DEFINE_string('train', os.environ.get('SM_CHANNEL_TRAIN'))
 flags.DEFINE_string('val', os.environ.get('SM_CHANNEL_VAL'))
 flags.DEFINE_string('model_dir', os.environ.get('SM_CHANNEL_MODEL_DIR'))
-)
+
 FLAGS = flags.FLAGS
 
 
