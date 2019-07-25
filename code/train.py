@@ -55,7 +55,7 @@ flags.DEFINE_string('checkpoint_dir', None, 'Path to directory holding a checkpo
       '`checkpoint_dir` is provided, this binary operates in eval-only mode, '
       'writing resulting metrics to `model_dir`.')
 flags.DEFINE_boolean('run_once', False, 'If running in eval-only mode, whether to run just '
-      'one round of eval vs running continuously (default).'
+      'one round of eval vs running continuously (default).')
 # SageMaker Strings
 flags.DEFINE_string('train', os.environ.get('SM_CHANNEL_TRAIN'))
 flags.DEFINE_string('val', os.environ.get('SM_CHANNEL_VAL'))
