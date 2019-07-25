@@ -56,14 +56,23 @@ flags.DEFINE_string('checkpoint_dir', None, 'Path to directory holding a checkpo
       'writing resulting metrics to `model_dir`.')
 flags.DEFINE_boolean('run_once', False, 'If running in eval-only mode, whether to run just '
       'one round of eval vs running continuously (default).'
+# SageMaker Strings
+flags.DEFINE_string('train', os.environ.get('SM_CHANNEL_TRAIN'))
+flags.DEFINE_string('val', os.environ.get('SM_CHANNEL_VAL'))
+flags.DEFINE_string('model_dir', os.environ.get('SM_CHANNEL_MODEL_DIR'))
 )
 FLAGS = flags.FLAGS
 
 
 def main(unused_argv):
   print ("*** train.py/main()")
-  flags.mark_flag_as_required('model_dir')
-  flags.mark_flag_as_required('pipeline_config_path')
+  # flags.mark_flag_as_required('model_dir')
+  # flags.mark_flag_as_required('pipeline_config_path')
+
+  print ('*** FLAGS ***')
+  print ("model_dir:", FLAGS.model_dir)
+  print ("train:", FLAGS.train)
+  print ("val:", FLAGS.val)
 
   config = tf.estimator.RunConfig(model_dir=FLAGS.model_dir)
   
