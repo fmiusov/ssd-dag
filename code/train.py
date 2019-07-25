@@ -33,8 +33,6 @@ sys.path.append(slim)
 from object_detection import model_hparams
 from object_detection import model_lib
 
-flags.DEFINE_string('model_dir', None, 'Path to output model directory '
-      'where event and checkpoint files will be written.')
 flags.DEFINE_string('pipeline_config_path', None, 'Path to pipeline config '
       'file.')
 flags.DEFINE_integer('num_train_steps', None, 'Number of train steps.')
@@ -57,9 +55,9 @@ flags.DEFINE_string('checkpoint_dir', None, 'Path to directory holding a checkpo
 flags.DEFINE_boolean('run_once', False, 'If running in eval-only mode, whether to run just '
       'one round of eval vs running continuously (default).')
 # SageMaker Strings
-flags.DEFINE_string('train', os.environ.get('SM_CHANNEL_TRAIN'))
-flags.DEFINE_string('val', os.environ.get('SM_CHANNEL_VAL'))
-flags.DEFINE_string('model_dir', os.environ.get('SM_CHANNEL_MODEL_DIR'))
+flags.DEFINE_string('train', os.environ.get('SM_CHANNEL_TRAIN'), 'training data') # None, os.environ.get('SM_CHANNEL_TRAIN'))
+flags.DEFINE_string('val', os.environ.get('SM_CHANNEL_VAL'), 'valuation data')  # None, os.environ.get('SM_CHANNEL_VAL'))
+flags.DEFINE_string('model_dir', os.environ.get('SM_CHANNEL_MODEL_DIR'), 'output')    # None, os.environ.get('SM_CHANNEL_MODEL_DIR'))
 
 FLAGS = flags.FLAGS
 
