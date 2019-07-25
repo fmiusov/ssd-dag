@@ -10,6 +10,8 @@
 
 # reference - the Jupyter TrainModel.ipynb
 
+# run this from the ssd-dag/tasks directory
+
 # GLOBAL environments
 S3_TFRECORDS_PATH="s3://cfaanalyticsresearch-sagemaker/datasets/cfa_products/tfrecords/"
 TFRECORDS_TARBALL="20190718_tfrecords.tar.gz"
@@ -18,7 +20,8 @@ S3_MODEL_PATH="s3://cfaanalyticsresearch-sagemaker/trained-models/tensorflow_mob
 BASE_MODEL_FOLDER="20180718_coco14_mobilenet_v1_ssd300_quantized"
 CFA_MODEL_FOLDER="20190718_cfa_prod_mobilenet_v1_ssd300/"
 
-cd $HOME/projects/ssd-dag/code
+# assumes you are in tasks directory
+cd ../code
 
 # --- data:  tfrecords ---
 echo ${S3_TFRECORDS_PATH}${TFRECORDS_TARBALL}
@@ -26,6 +29,15 @@ echo ${S3_TFRECORDS_PATH}${TFRECORDS_TARBALL}
 aws s3 cp ${S3_TFRECORDS_PATH}${TFRECORDS_TARBALL} tfrecords
 
 tar -xvf tfrecords/${TFRECORDS_TARBALL} --strip=1 -C tfrecords
+
+# move to subdirectories
+rm tfrecords/train/*.tfrecord* -f
+rm tfrecords/val/*.tfrecord*   -f
+
+mv tfrecords/train*.* tfrecords/train
+mv tfrecords/val*.* tfrecords/val
+
+! rm code/tfrecords/$TFRECORDS_TARBALL
 rm tfrecords/${TFRECORDS_TARBALL}
 
 # --- ckpt (checkpoint) that you are training on TOP OF - aka xfer learning  ---
