@@ -4,8 +4,14 @@
 
 *.tar.gz
 
+# ignore personal IDE settings
+.vscode
+
 model/*.*
 !model/.gitkeep
+
+# ignore the installation of tensorflow/models
+models/*.*
 
 data/annotations/*.*
 !data/annotations/.gitkeep

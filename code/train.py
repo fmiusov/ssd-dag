@@ -21,6 +21,7 @@ from __future__ import print_function
 from absl import flags
 
 import os
+import subprocess
 import sys
 import tensorflow as tf
 
@@ -29,6 +30,14 @@ import tensorflow as tf
 cwd = os.getcwd()
 slim = os.path.join(cwd, 'models/research/slim')
 sys.path.append(slim)
+
+# process pip installs that won't be part of default environment
+def pip_install(package_list):
+    for pkg in package_list:
+        print ("--> installing:", pkg)
+        result = subprocess.call([sys.executable, '-m', 'pip', 'install',pkg])
+
+pip_install(["pycocotools"])
 
 from object_detection import model_hparams
 from object_detection import model_lib
@@ -62,6 +71,7 @@ flags.DEFINE_string('model_dir', os.environ.get('SM_CHANNEL_MODEL_DIR'), 'output
 FLAGS = flags.FLAGS
 
 
+
 def main(unused_argv):
   print ("*** train.py/main()")
   # flags.mark_flag_as_required('model_dir')
@@ -74,6 +84,8 @@ def main(unused_argv):
 
   config = tf.estimator.RunConfig(model_dir=FLAGS.model_dir)
   
+
+
   # Creates `Estimator`, input functions, and steps
   train_and_eval_dict = model_lib.create_estimator_and_inputs(
       run_config=config,
