@@ -37,7 +37,7 @@ def pip_install(package_list):
         print ("--> installing:", pkg)
         result = subprocess.call([sys.executable, '-m', 'pip', 'install',pkg])
 
-pip_install(["cython", "pycocotools"])
+pip_install(["cython", "pycocotools", "matplotlib"])
 
 from object_detection import model_hparams
 from object_detection import model_lib
