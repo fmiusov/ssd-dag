@@ -81,7 +81,9 @@ def main(unused_argv):
   print ("model_dir:", FLAGS.model_dir)
   print ("train:", FLAGS.train)
   print ("val:", FLAGS.val)
-
+  print ("sample_1_of_n_eval_examples:", FLAGS.sample_1_of_n_eval_examples)
+  print ("hparams_overrides:", FLAGS.hparams_overrides)
+  print ("")
   config = tf.estimator.RunConfig(model_dir=FLAGS.model_dir)
   
 
