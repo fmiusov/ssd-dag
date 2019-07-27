@@ -82,7 +82,7 @@ def main(unused_argv):
   print ("pipeline_config_path:", FLAGS.pipeline_config_path)
   ## --verification - debug
   print ("config exists:", os.path.exists(FLAGS.pipeline_config_path))
-  dir_list = [f for f in listdir(mypath)]
+  dir_list = [f for f in listdir(".")]
   for item in dir_list:
         print ("file:", item)
 
