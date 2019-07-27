@@ -83,10 +83,13 @@ def main(unused_argv):
   print ("val:", FLAGS.val)
   print ("sample_1_of_n_eval_examples:", FLAGS.sample_1_of_n_eval_examples)
   print ("hparams_overrides:", FLAGS.hparams_overrides)
-  print ("")
+  print ("checkpoint_dir:", FLAGS.checkpoint_dir)
+  print (" - - - - - - - - -")
   config = tf.estimator.RunConfig(model_dir=FLAGS.model_dir)
   
-
+  tf.enable_eager_execution()
+  tf.set_random_seed(0)
+  tf.logging.set_verbosity(tf.logging.ERROR)
 
   # Creates `Estimator`, input functions, and steps
   train_and_eval_dict = model_lib.create_estimator_and_inputs(
