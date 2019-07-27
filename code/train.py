@@ -21,6 +21,7 @@ from __future__ import print_function
 from absl import flags
 
 import os
+from os.path import isfile, join
 import subprocess
 import sys
 import tensorflow as tf
@@ -71,13 +72,19 @@ flags.DEFINE_string('model_dir', os.environ.get('SM_CHANNEL_MODEL_DIR'), 'output
 FLAGS = flags.FLAGS
 
 
-
 def main(unused_argv):
   print ("*** train.py/main()")
   # flags.mark_flag_as_required('model_dir')
   # flags.mark_flag_as_required('pipeline_config_path')
 
   print ('*** FLAGS ***')
+  print ("pipeline_config_path:", FLAGS.pipeline_config_path)
+  ## --verification - debug
+  print ("config exists:", os.path.exists(FLAGS.pipeline_config_path))
+  dir_list = [f for f in listdir(mypath)]
+  for item in dir_list:
+        print ("file:", item)
+
   print ("model_dir:", FLAGS.model_dir)
   print ("train:", FLAGS.train)
   print ("val:", FLAGS.val)
