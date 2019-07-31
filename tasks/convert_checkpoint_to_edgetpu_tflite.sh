@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# Convert the checkpoint to tflite model
+#  a) chechpoint -> frozen graph
+#  b) frozen graph -> tflite
+#
+#  Expects :
+#  - to be executed from tasks/
+#  - tflite_model directory exists
+#  - code/ (tensorflow/models was cloned)
+#  - verify the globals below
+#
+OUTPUT_DIR=../tflite_model
+MODEL_RESEARCH=../code/models/research
+TRAIN_DIR=../trained_model
+
+# don't ask - this came from the Coral tutorial
+#           - this is probably related to the shape of the expected input and output tensors
+INPUT_TENSORS='normalized_input_image_tensor'
+OUTPUT_TENSORS='TFLite_Detection_PostProcess,TFLite_Detection_PostProcess:1,TFLite_Detection_PostProcess:2,TFLite_Detection_PostProc
+ess:3'
+
+# Exit script on error.
+set -e
+# Echo each command, easier for debugging.
+set -x
+
+usage() {
+  cat << END_OF_USAGE
+  Converts TensorFlow checkpoint to EdgeTPU-compatible TFLite file.
+
+  --checkpoint_num  Checkpoint number, by default 0.
+  --pipeline_config
+  --help            Display this help.
+END_OF_USAGE
+}
+
+ckpt_number=0
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --checkpoint_num)
+      ckpt_number=$2
+      shift 2 ;;
+    --pipeline_config)
+      pipeline_config=$2
+      shift 2 ;; 
+    --help)
+      usage
+      exit 0 ;;
+    --*)
+      echo "Unknown flag $1"
+      usage
+      exit 1 ;;
+  esac
+done
+
+rm ${OUTPUT_DIR} -rf
+
+# - we don't think labels.txt is used, so don't copy it
+# - this code can be deleted - if everything runs :)
+# echo "copy labels.txt file from ${DATASET_DIR}"
+# cp ${DATASET_DIR}/labels.txt ${OUTPUT_DIR}
+
+
+echo "EXPORTING frozen graph from checkpoint..."
+python ${MODEL_RESEARCH}/object_detection/export_tflite_ssd_graph.py \
+  --pipeline_config_path="${CKPT_DIR}/${pipeline_config}" \
+  --trained_checkpoint_prefix="${TRAIN_DIR}/model.ckpt-${ckpt_number}" \
+  --output_directory="${OUTPUT_DIR}" \
+  --add_postprocessing_op=true
+
+echo "CONVERTING frozen graph to TF Lite file..."
+tflite_convert \
+  --output_file="${OUTPUT_DIR}/output_tflite_graph.tflite" \
+  --graph_def_file="${OUTPUT_DIR}/tflite_graph.pb" \
+  --inference_type=QUANTIZED_UINT8 \
+  --input_arrays="${INPUT_TENSORS}" \
+  --output_arrays="${OUTPUT_TENSORS}" \
+  --mean_values=128 \
+  --std_dev_values=128 \
+  --input_shapes=1,300,300,3 \
+  --change_concat_input_ranges=false \
+  --allow_nudging_weights_to_use_fast_gemm_kernel=true \
+  --allow_custom_ops
+
+echo "TFLite graph generated at ${OUTPUT_DIR}/output_tflite_graph.tflite"
