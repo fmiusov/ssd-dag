@@ -41,7 +41,7 @@ def inference_to_image(model_type, logger,
         objects_per_image_ignored = 0
         detected_objects = []                               # empty list of of detected object attributes
         inferences_per_image = prob_array.shape[0]          # how many inferences for this image
-        cv2.namedWindow('Object Detect')
+        
         for i in range(inferences_per_image):
                 if prob_array[i] > prob_threshold and prob_array[i] <= 1.00:
                     class_id = int(class_id_array[i]) + 1   

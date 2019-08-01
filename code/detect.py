@@ -181,6 +181,7 @@ if __name__ == '__main__':
                     model_input_dim, label_dict, PROBABILITY_THRESHOLD)
 
                 if args.display == 'gtk':
+                    cv2.namedWindow('Object Detect')
                     image = cv2.cvtColor(inference_image, cv2.COLOR_RGB2BGR)
                     cv2.imshow('Object Detect', image)
                     cv2.waitKey(0)
