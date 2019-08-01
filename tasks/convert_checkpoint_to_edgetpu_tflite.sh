@@ -10,15 +10,25 @@
 #  - code/ (tensorflow/models was cloned)
 #  - verify the globals below
 #
-OUTPUT_DIR=../tflite_model
-MODEL_RESEARCH=../code/models/research
-TRAIN_DIR=../trained_model
+echo TASKS_DIR=$(pwd)
+cd ..
+export PROJECT_DIR=$(pwd)
+export CODE_DIR="${PROJECT_DIR}/code"
+export OUTPUT_DIR="${PROJECT_DIR}/tflite_model"
+export MODEL_RESEARCH="${PROJECT_DIR}/code/models/research"
+export TRAINED_DIR="${PROJECT_DIR}/trained_model"
+
+export PYTHONPATH="${PYTHONPATH}:${MODEL_RESEARCH}/slim"     # you are setting the path so Python will import from the tensorflow repo
+export PYTHONPATH="${PYTHONPATH}:${MODEL_RESEARCH}"
+
+echo "***"
+echo $OUTPUT_DIR
+echo $PYTHONPATH
 
 # don't ask - this came from the Coral tutorial
 #           - this is probably related to the shape of the expected input and output tensors
-INPUT_TENSORS='normalized_input_image_tensor'
-OUTPUT_TENSORS='TFLite_Detection_PostProcess,TFLite_Detection_PostProcess:1,TFLite_Detection_PostProcess:2,TFLite_Detection_PostProc
-ess:3'
+export INPUT_TENSORS='normalized_input_image_tensor'
+export OUTPUT_TENSORS='TFLite_Detection_PostProcess,TFLite_Detection_PostProcess:1,TFLite_Detection_PostProcess:2,TFLite_Detection_PostProcess:3'
 
 # Exit script on error.
 set -e
@@ -64,11 +74,13 @@ rm ${OUTPUT_DIR} -rf
 
 echo "EXPORTING frozen graph from checkpoint..."
 python ${MODEL_RESEARCH}/object_detection/export_tflite_ssd_graph.py \
-  --pipeline_config_path="${CKPT_DIR}/${pipeline_config}" \
-  --trained_checkpoint_prefix="${TRAIN_DIR}/model.ckpt-${ckpt_number}" \
+  --pipeline_config_path="${CODE_DIR}/${pipeline_config}" \
+  --trained_checkpoint_prefix="${TRAINED_DIR}/model.ckpt-${ckpt_number}" \
   --output_directory="${OUTPUT_DIR}" \
   --add_postprocessing_op=true
 
+echo " - - - - - - - -"
+echo INPUT_TENORS
 echo "CONVERTING frozen graph to TF Lite file..."
 tflite_convert \
   --output_file="${OUTPUT_DIR}/output_tflite_graph.tflite" \

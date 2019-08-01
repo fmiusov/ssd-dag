@@ -48,5 +48,6 @@ code/tfrecords/train/*.tfrecord
 code/tfrecords/val/*.tfrecord
 !code/tfrecords/val/.gitkeep
 
-
+trained_model/*.*
+!trained_model/.gitkeep
 
