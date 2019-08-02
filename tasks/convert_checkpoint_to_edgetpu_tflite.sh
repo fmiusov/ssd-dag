@@ -10,11 +10,14 @@
 #  - code/ (tensorflow/models was cloned)
 #  - verify the globals below
 #
+# ref:  https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/exporting_models.md
+#
 echo TASKS_DIR=$(pwd)
 cd ..
 export PROJECT_DIR=$(pwd)
 export CODE_DIR="${PROJECT_DIR}/code"
-export OUTPUT_DIR="${PROJECT_DIR}/tflite_model"
+export TFLITE_DIR="${PROJECT_DIR}/tflite_model"
+export TENSORFLOW_DIR="${PROJECT_DIR}/tensorflow_model"
 export MODEL_RESEARCH="${PROJECT_DIR}/code/models/research"
 export TRAINED_DIR="${PROJECT_DIR}/trained_model"
 
@@ -22,7 +25,7 @@ export PYTHONPATH="${PYTHONPATH}:${MODEL_RESEARCH}/slim"     # you are setting t
 export PYTHONPATH="${PYTHONPATH}:${MODEL_RESEARCH}"
 
 echo "***"
-echo $OUTPUT_DIR
+echo $TFLITE_DIR
 echo $PYTHONPATH
 
 # don't ask - this came from the Coral tutorial
@@ -64,27 +67,33 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-rm ${OUTPUT_DIR} -rf
+rm ${TENSORFLOW_DIR} -rf
+rm ${TFLITE_DIR} -rf
 
 # - we don't think labels.txt is used, so don't copy it
 # - this code can be deleted - if everything runs :)
 # echo "copy labels.txt file from ${DATASET_DIR}"
-# cp ${DATASET_DIR}/labels.txt ${OUTPUT_DIR}
+# cp ${DATASET_DIR}/labels.txt ${TFLITE_DIR}
+echo " - - - CKPT ==> tensorflow frozen graph - - -"
+python ${MODEL_RESEARCH}/object_detection/export_inference_graph.py \
+  --input_type image_tensor \
+  --pipeline_config_path="${CODE_DIR}/${pipeline_config}" \ \
+  --trained_checkpoint_prefix="${TRAINED_DIR}/model.ckpt-${ckpt_number}" \
+  --output_directory="${TENSORFLOW_DIR}"
 
-
-echo "EXPORTING frozen graph from checkpoint..."
+echo " - - - CKPT ==> tflite frozen graph - - -"
 python ${MODEL_RESEARCH}/object_detection/export_tflite_ssd_graph.py \
   --pipeline_config_path="${CODE_DIR}/${pipeline_config}" \
   --trained_checkpoint_prefix="${TRAINED_DIR}/model.ckpt-${ckpt_number}" \
-  --output_directory="${OUTPUT_DIR}" \
+  --output_directory="${TFLITE_DIR}" \
   --add_postprocessing_op=true
 
 echo " - - - - - - - -"
 echo INPUT_TENORS
-echo "CONVERTING frozen graph to TF Lite file..."
+echo " - - - tflite frozen graph ==> *.tflite - - - "
 tflite_convert \
-  --output_file="${OUTPUT_DIR}/output_tflite_graph.tflite" \
-  --graph_def_file="${OUTPUT_DIR}/tflite_graph.pb" \
+  --output_file="${TFLITE_DIR}/output_tflite_graph.tflite" \
+  --graph_def_file="${TFLITE_DIR}/tflite_graph.pb" \
   --inference_type=QUANTIZED_UINT8 \
   --input_arrays="${INPUT_TENSORS}" \
   --output_arrays="${OUTPUT_TENSORS}" \
@@ -95,4 +104,4 @@ tflite_convert \
   --allow_nudging_weights_to_use_fast_gemm_kernel=true \
   --allow_custom_ops
 
-echo "TFLite graph generated at ${OUTPUT_DIR}/output_tflite_graph.tflite"
+echo "TFLite graph generated at ${TFLITE_DIR}/output_tflite_graph.tflite"
