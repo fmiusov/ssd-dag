@@ -30,7 +30,9 @@ import tensorflow as tf
 # without this PATH append
 # it won't find nets - in the /slim directory
 cwd = os.getcwd()
+models = os.path.join(cwd, 'models/research/')
 slim = os.path.join(cwd, 'models/research/slim')
+sys.path.append(models)
 sys.path.append(slim)
 
 # process pip installs that won't be part of default environment
