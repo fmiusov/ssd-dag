@@ -19,14 +19,14 @@ data/annotations/*.*
 data/unverified_annotations/*.*
 !/data/unverified_annotations/.gitkeep
 
-data/new_jpeg_images/*.*
-!data/new_jpeg_images/.gitkeep
+data/jpeg_images/*.*
+!data/jpeg_images/.gitkeep
 
-data/new_jpeg_tarball_extract/*.*
-!data/new_jpeg_tarball_extract/.gitkeep
+data/tarball_extract/*.*
+!data/tarball_extract/.gitkeep
 
-data/new_jpeg_tarballs/*.*
-!data/new_jpeg_tarballs/.gitkeep
+data/tarballs/*.*
+!data/tarballs/.gitkeep
 
 data/tfrecords/*.*
 !data/tfrecords/.gitkeep
