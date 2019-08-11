@@ -150,10 +150,11 @@ def voc_to_tfrecord_file(image_dir,
                         if exclude_truncated and (truncated == 1): continue
                         difficult = int(obj.difficult.text)
                         if exclude_difficult and (difficult == 1): continue
-                        xmin = int(obj.bndbox.xmin.text)
-                        ymin = int(obj.bndbox.ymin.text)
-                        xmax = int(obj.bndbox.xmax.text)
-                        ymax = int(obj.bndbox.ymax.text)
+                        # print (image_id, image_count, "xmin:", obj.bndbox.xmin.text)
+                        xmin = int(obj.bndbox.xmin.text.split('.')[0])  # encountered a few decimals - that will throw an error
+                        ymin = int(obj.bndbox.ymin.text.split('.')[0])
+                        xmax = int(obj.bndbox.xmax.text.split('.')[0])
+                        ymax = int(obj.bndbox.ymax.text.split('.')[0])
                         item_dict = {'class_name': class_name,
                                     'class_id': class_id,
                                     'pose': pose,
@@ -220,7 +221,6 @@ def voc_to_tfrecord_file(image_dir,
         # TODO - shard on larger sets
         #        https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/using_your_own_dataset.md
         tf_writer.close()                   # close the writer
-        FLAGS.__delattr__('output_path')    # you can't resuse a FLAG so you have to delete it
         print ('     image count:', image_count, "  class_count:", class_dict)
     return 1
 

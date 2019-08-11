@@ -11,7 +11,7 @@ model/*.*
 !model/.gitkeep
 
 # ignore the installation of tensorflow/models
-models/*.*
+code/models/*.*
 
 data/annotations/*.*
 !data/annotations/.gitkeep
@@ -28,8 +28,12 @@ data/tarball_extract/*.*
 data/tarballs/*.*
 !data/tarballs/.gitkeep
 
-data/tfrecords/*.*
-!data/tfrecords/.gitkeep
+data/tfrecords/train/*.*
+data/tfrecords/test/*.*
+data/tfrecords/val/*.*
+!data/tfrecords/train/.gitkeep
+!data/tfrecords/test/.gitkeep
+!data/tfrecords/val/.gitkeep
 
 
 
