@@ -168,7 +168,7 @@ def voc_to_tfrecord_file(image_dir,
     
             # get the encoded image
             img_path = os.path.join(image_dir, image_id + ".jpg")
-            with tf.gfile.GFile(img_path, 'rb') as fid:
+            with tf.io.gfile.GFile(img_path, 'rb') as fid:
                 encoded_jpg = fid.read()
 
             # now you have everything necessary to create a tf.example
