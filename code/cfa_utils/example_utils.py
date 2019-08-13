@@ -42,21 +42,21 @@ feature_obj_detect = {
         'image/width': tf.io.FixedLenFeature((), tf.int64, default_value=1),
         # Image-level labels.
         # these are encoded byte arrays but DType is string
-        'image/class/text': tf.VarLenFeature(tf.string),
-        'image/class/label': tf.VarLenFeature(tf.int64),
+        'image/class/text': tf.io.VarLenFeature(tf.string),
+        'image/class/label': tf.io.VarLenFeature(tf.int64),
         # Object boxes and classes.
         # note - these are VarLen features
-        'image/object/bbox/xmin': tf.VarLenFeature(tf.float32),
-        'image/object/bbox/xmax': tf.VarLenFeature(tf.float32),
-        'image/object/bbox/ymin': tf.VarLenFeature(tf.float32),
-        'image/object/bbox/ymax': tf.VarLenFeature(tf.float32),
-        'image/object/class/label': tf.VarLenFeature(tf.int64),
-        'image/object/class/text': tf.VarLenFeature(tf.string),
-        'image/object/area': tf.VarLenFeature(tf.float32),
-        'image/object/is_crowd': tf.VarLenFeature(tf.int64),
-        'image/object/difficult': tf.VarLenFeature(tf.int64),
-        'image/object/group_of': tf.VarLenFeature(tf.int64),
-        'image/object/weight': tf.VarLenFeature(tf.float32),
+        'image/object/bbox/xmin': tf.io.VarLenFeature(tf.float32),
+        'image/object/bbox/xmax': tf.io.VarLenFeature(tf.float32),
+        'image/object/bbox/ymin': tf.io.VarLenFeature(tf.float32),
+        'image/object/bbox/ymax': tf.io.VarLenFeature(tf.float32),
+        'image/object/class/label': tf.io.VarLenFeature(tf.int64),
+        'image/object/class/text': tf.io.VarLenFeature(tf.string),
+        'image/object/area': tf.io.VarLenFeature(tf.float32),
+        'image/object/is_crowd': tf.io.VarLenFeature(tf.int64),
+        'image/object/difficult': tf.io.VarLenFeature(tf.int64),
+        'image/object/group_of': tf.io.VarLenFeature(tf.int64),
+        'image/object/weight': tf.io.VarLenFeature(tf.float32),
     }
 
 # return a list of imagesets in given directory
