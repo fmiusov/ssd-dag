@@ -21,7 +21,7 @@ sys.path.append(tf_serving_repo)
 
 
 # GLOBALS
-SERVER_URL = SERVER_URL = 'http://localhost:8501/v1/models/cfa_prod:predic'
+SERVER_URL = SERVER_URL = 'http://localhost:8501/v1/models/cfa_prod:predict'
 SAMPLE_IMAGE = '20190710_variety_1562781001.jpg'
 
 
