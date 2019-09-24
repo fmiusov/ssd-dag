@@ -14,21 +14,23 @@ import tensorflow as tf
 
 # without this PATH append
 # it won't find nets - in the /slim directory
-cwd = os.getcwd()
+code_dir = os.getcwd()  
+jpeg_images_dir = os.path.expanduser('~/projects/ssd-dag/data/jpeg_images')
 tf_serving_repo = os.path.expanduser('~/projects/serving')
 sys.path.append(tf_serving_repo)
 
 
 # GLOBALS
 SERVER_URL = SERVER_URL = 'http://localhost:8501/v1/models/cfa_prod:predic'
-SAMPLE_IMAGE = '/home/jay.duff/projects/ssd-dag/data/jpeg_images/20190710_variety_1562781001.jpg'
+SAMPLE_IMAGE = '20190710_variety_1562781001.jpg'
 
 
 def main():
     print ("-- TensorFlow Serving - MobileNet Inference --")
 
     # read in the sample image & shape the numpy array
-    img = tf.keras.preprocessing.image.load_img(SAMPLE_IMAGE, target_size=[300, 300])   # PIL image
+    img_path = os.path.join(jpeg_images_dir, SAMPLE_IMAGE)
+    img = tf.keras.preprocessing.image.load_img(img_path, target_size=[300, 300])   # PIL image
     x = tf.keras.preprocessing.image.img_to_array(img)  # numpy array (300,300,3)
     x32 = tf.keras.applications.mobilenet.preprocess_input(x[tf.newaxis,...])  # numpy (1,300,300,3) float32
     print (type(x32), x32.shape)
