@@ -40,12 +40,8 @@ feature_obj_detect = {
         'image/source_id': tf.io.FixedLenFeature((), tf.string, default_value=''),
         'image/height': tf.io.FixedLenFeature((), tf.int64, default_value=1),
         'image/width': tf.io.FixedLenFeature((), tf.int64, default_value=1),
-        # Image-level labels.
-        # these are encoded byte arrays but DType is string
         'image/class/text': tf.io.VarLenFeature(tf.string),
         'image/class/label': tf.io.VarLenFeature(tf.int64),
-        # Object boxes and classes.
-        # note - these are VarLen features
         'image/object/bbox/xmin': tf.io.VarLenFeature(tf.float32),
         'image/object/bbox/xmax': tf.io.VarLenFeature(tf.float32),
         'image/object/bbox/ymin': tf.io.VarLenFeature(tf.float32),
@@ -56,7 +52,7 @@ feature_obj_detect = {
         'image/object/is_crowd': tf.io.VarLenFeature(tf.int64),
         'image/object/difficult': tf.io.VarLenFeature(tf.int64),
         'image/object/group_of': tf.io.VarLenFeature(tf.int64),
-        'image/object/weight': tf.io.VarLenFeature(tf.float32),
+        'image/object/weight': tf.io.VarLenFeature(tf.float32)
     }
 
 # return a list of imagesets in given directory
