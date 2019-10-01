@@ -198,21 +198,24 @@ def voc_to_tfrecord_file(image_dir,
                 class_ids.append(int(box['class_id']))
 
             image_format = b'jpg'
+            # use the commonly defined feature dictionary
+            feature = feature_obj_detect.copy()
+            # thus you have a common structure for writing & reading
+            # these image features
+            feature['image/height'] = int64_feature(int(sizeHeight))
+            feature['image/width'] = int64_feature(int(sizeWidth))
+            feature['image/filename'] = bytes_feature(str.encode(filename))
+            feature['image/source_id'] = bytes_feature(str.encode(filename))
+            feature['image/encoded'] = bytes_feature(encoded_jpg)
+            feature['image/format'] = bytes_feature(image_format)
+            feature['image/object/bbox/xmin'] = float_list_feature(xmins)
+            feature['image/object/bbox/xmax'] = float_list_feature(xmaxs)
+            feature['image/object/bbox/ymin'] = float_list_feature(ymins)
+            feature['image/object/bbox/ymax'] = float_list_feature(ymaxs)
+            feature['image/object/class/text'] = bytes_list_feature(class_names)
+            feature['image/object/class/label'] = int64_list_feature(class_ids)
 
-            tf_example = tf.train.Example(features=tf.train.Features(feature={
-                'image/height': int64_feature(int(sizeHeight)),
-                'image/width': int64_feature(int(sizeWidth)),
-                'image/filename': bytes_feature(str.encode(filename)),
-                'image/source_id': bytes_feature(str.encode(filename)),
-                'image/encoded': bytes_feature(encoded_jpg),
-                'image/format': bytes_feature(image_format),
-                'image/object/bbox/xmin': float_list_feature(xmins),
-                'image/object/bbox/xmax': float_list_feature(xmaxs),
-                'image/object/bbox/ymin': float_list_feature(ymins),
-                'image/object/bbox/ymax': float_list_feature(ymaxs),
-                'image/object/class/text': bytes_list_feature(class_names),
-                'image/object/class/label': int64_list_feature(class_ids),
-            }))
+            tf_example = tf.train.Example(features=tf.train.Features(feature=feature))
             # write to the tfrecords writer
             tf_writer.write(tf_example.SerializeToString())
             image_count = image_count + 1
