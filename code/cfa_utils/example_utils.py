@@ -215,7 +215,9 @@ def voc_to_tfrecord_file(image_dir,
             feature['image/object/class/text'] = bytes_list_feature(class_names)
             feature['image/object/class/label'] = int64_list_feature(class_ids)
 
-            tf_example = tf.train.Example(features=tf.train.Features(feature=feature))
+            features = tf.train.Features(feature=feature)
+
+            tf_example = tf.train.Example(features=features)
             # write to the tfrecords writer
             tf_writer.write(tf_example.SerializeToString())
             image_count = image_count + 1
