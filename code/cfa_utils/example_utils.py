@@ -32,6 +32,10 @@ def bytes_list_feature(value):
 def float_list_feature(value):
   return tf.train.Feature(float_list=tf.train.FloatList(value=value))
 
+# use this as the standard feature definition for MobileNet SSD Example
+# this comes from the models/mobilenet code - it's not CFA specific
+# but it's specific to the model - must be consistent through the pipeline
+
 feature_obj_detect = {
         'image/encoded': tf.io.FixedLenFeature((), tf.string, default_value=''),
         'image/format': tf.io.FixedLenFeature((), tf.string, default_value='jpeg'),
@@ -54,6 +58,22 @@ feature_obj_detect = {
         'image/object/group_of': tf.io.VarLenFeature(tf.int64),
         'image/object/weight': tf.io.VarLenFeature(tf.float32)
     }
+
+# Default values for the annotations
+# - seems you must supply a value for every attr in the  dict
+#   or you'll get a MergeFrom error
+IMG_ENCODED = b'base64'
+IMG_FORMAT = b'jpg'
+IMG_SHA256 = b''
+IMG_CLASS_NAMES = [b'cfa_prod']
+IMG_CLASS_IDS = [1]
+
+OBJ_AREA = 1.0
+OBJ_IS_CROWD = 0
+OBJ_DIFFICULT = 0  # the DIFFICULT in XML is per image - not per object
+OBJ_GROUP_OF = 1
+OBJ_WEIGHT = 1
+
 
 # return a list of imagesets in given directory
 def get_imagesets(imageset_dir):
@@ -180,6 +200,12 @@ def voc_to_tfrecord_file(image_dir,
             ymaxs = []
             class_names = []
             class_ids = []
+            obj_areas = []
+            obj_is_crowds = []
+            obj_difficults = []
+            obj_group_ofs = []
+            obj_weights = []
+
             # loop through each bbox to make a list of each
             for box in boxes:
                 # print ("       ", box)
@@ -193,23 +219,46 @@ def voc_to_tfrecord_file(image_dir,
                 class_names.append(str.encode(box['class_name']))
                 class_ids.append(int(box['class_id']))
 
-            image_format = b'jpg'
+                obj_areas.append(OBJ_AREA)
+                obj_is_crowds.append(OBJ_IS_CROWD)
+                obj_difficults.append(OBJ_DIFFICULT)
+                obj_group_ofs.append(OBJ_GROUP_OF)
+                obj_weights.append(OBJ_WEIGHT)
+
             # use the commonly defined feature dictionary
             feature = feature_obj_detect.copy()
             # thus you have a common structure for writing & reading
             # these image features
+
+            # per image attributes
+            feature['image/encoded'] = bytes_feature(IMG_ENCODED)
+            feature['image/format'] = bytes_feature(IMG_FORMAT)
+            feature['image/filename'] = bytes_feature(str.encode(filename))
+            feature['image/key/sha256'] = bytes_feature(IMG_SHA256)
+            feature['image/source_id'] = bytes_feature(str.encode(image_id))
+
             feature['image/height'] = int64_feature(int(sizeHeight))
             feature['image/width'] = int64_feature(int(sizeWidth))
-            feature['image/filename'] = bytes_feature(str.encode(filename))
-            feature['image/source_id'] = bytes_feature(str.encode(filename))
-            feature['image/encoded'] = bytes_feature(encoded_jpg)
-            feature['image/format'] = bytes_feature(image_format)
+
+            feature['image/class/text'] = bytes_list_feature(IMG_CLASS_NAMES)
+            feature['image/class/label'] = int64_list_feature(IMG_CLASS_IDS)
+
+
+            # per image/object attributes
             feature['image/object/bbox/xmin'] = float_list_feature(xmins)
             feature['image/object/bbox/xmax'] = float_list_feature(xmaxs)
             feature['image/object/bbox/ymin'] = float_list_feature(ymins)
             feature['image/object/bbox/ymax'] = float_list_feature(ymaxs)
             feature['image/object/class/text'] = bytes_list_feature(class_names)
             feature['image/object/class/label'] = int64_list_feature(class_ids)
+
+            # these are all taken from default values
+            feature['image/object/area'] = float_list_feature(obj_areas)
+            feature['image/object/is_crowd'] = int64_list_feature(obj_crowds)
+            feature['image/object/difficult'] = int64_list_feature(obj_difficults)
+            feature['image/object/group_of'] = int64_list_feature(obj_group_ofs)
+            feature['image/object/weight'] = float_list_feature(obj_weights)
+
 
             features = tf.train.Features(feature=feature)
 
