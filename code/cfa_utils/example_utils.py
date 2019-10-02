@@ -254,7 +254,7 @@ def voc_to_tfrecord_file(image_dir,
 
             # these are all taken from default values
             feature['image/object/area'] = float_list_feature(obj_areas)
-            feature['image/object/is_crowd'] = int64_list_feature(obj_crowds)
+            feature['image/object/is_crowd'] = int64_list_feature(obj_is_crowds)
             feature['image/object/difficult'] = int64_list_feature(obj_difficults)
             feature['image/object/group_of'] = int64_list_feature(obj_group_ofs)
             feature['image/object/weight'] = float_list_feature(obj_weights)
