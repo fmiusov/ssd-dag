@@ -62,7 +62,6 @@ feature_obj_detect = {
 # Default values for the annotations
 # - seems you must supply a value for every attr in the  dict
 #   or you'll get a MergeFrom error
-IMG_ENCODED = b'base64'
 IMG_FORMAT = b'jpg'
 IMG_SHA256 = b''
 IMG_CLASS_NAMES = [b'cfa_prod']
@@ -231,7 +230,7 @@ def voc_to_tfrecord_file(image_dir,
             # these image features
 
             # per image attributes
-            feature['image/encoded'] = bytes_feature(IMG_ENCODED)
+            feature['image/encoded'] = bytes_feature(encoded_jpg)
             feature['image/format'] = bytes_feature(IMG_FORMAT)
             feature['image/filename'] = bytes_feature(str.encode(filename))
             feature['image/key/sha256'] = bytes_feature(IMG_SHA256)
