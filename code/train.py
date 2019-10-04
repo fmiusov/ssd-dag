@@ -35,7 +35,9 @@ slim = os.path.join(cwd, 'models/research/slim')
 sys.path.append(models)
 sys.path.append(slim)
 
-from code.models.research.object_detection.utils import config_util
+# this is going to execute from the code directory
+# so, you don't need code.models, just models
+from models.research.object_detection.utils import config_util
 
 # process pip installs that won't be part of default environment
 def pip_install(package_list):
