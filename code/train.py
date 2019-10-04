@@ -35,6 +35,8 @@ slim = os.path.join(cwd, 'models/research/slim')
 sys.path.append(models)
 sys.path.append(slim)
 
+from code.models.research.object_detection.utils import config_util
+
 # process pip installs that won't be part of default environment
 def pip_install(package_list):
     for pkg in package_list:
@@ -74,6 +76,15 @@ flags.DEFINE_string('model_dir', os.environ.get('SM_CHANNEL_MODEL_DIR'), 'output
 
 FLAGS = flags.FLAGS
 
+def check_input_data_existance(pipeline_config_dict):
+    input_keys = ['train_input_config', 'eval_input_config']
+    for input_key in input_keys:
+        print ("checking inputs for:", input_key)
+        input_config = pipeline_config_dict[input_key]
+        path_list = input_config.tf_record_input_reader.input_path
+        for p in path_list:
+            exists = tf.io.gfile.exists(p)
+            print ("path:", exists, p)
 
 def main(unused_argv):
   print ("*** train.py/main()")
@@ -94,6 +105,10 @@ def main(unused_argv):
   print ("sample_1_of_n_eval_examples:", FLAGS.sample_1_of_n_eval_examples)
   print ("hparams_overrides:", FLAGS.hparams_overrides)
   print ("checkpoint_dir:", FLAGS.checkpoint_dir)
+  # check pipeline config pararameters
+  # - input data
+  pipeline_config_dict = config_util.get_configs_from_pipeline_file(FLAGS.pipeline_config_path)
+  check_input_data_existance(pipeline_config_dict)
   print (" - - - - - - - - -")
   config = tf.estimator.RunConfig(model_dir=FLAGS.model_dir)
   
