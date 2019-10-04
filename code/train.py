@@ -76,6 +76,8 @@ flags.DEFINE_string('model_dir', os.environ.get('SM_CHANNEL_MODEL_DIR'), 'output
 
 FLAGS = flags.FLAGS
 
+# function to read input path from the config file
+# then verify it exists
 def check_input_data_existance(pipeline_config_dict):
     input_keys = ['train_input_config', 'eval_input_config']
     for input_key in input_keys:
