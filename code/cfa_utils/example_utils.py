@@ -273,5 +273,77 @@ def voc_to_tfrecord_file(image_dir,
         print ('     image count:', image_count, "  class_count:", class_dict)
     return 1
 
+def _parse_function(example_proto):
+    # Parse the input using the standard dictionary
+    feature = tf.io.parse_single_example(example_proto, feature_obj_detect)
+    return feature
 
-    
+def get_class_names(label_map):
+    """
+    get the class names - as a dict of byte arrays
+    input:  full absolute path o the label map protobuf
+    output: dict of byte arrays {class id:  b'name'}
+    """
+    label_map = get_label_map_dict(label_map)
+    label_map_reverse = {}
+    for (k,v) in label_map.items():
+        label_map_reverse[v] = k
+    for (k,v) in label_map_reverse.items():
+        label_map_reverse[k] = str.encode(v)
+    return label_map_reverse
+
+def get_dataset_length(ds):
+    """
+    get dataset size
+      brute force iteration to get record count
+    """
+    num_elements = 0
+    for element in ds:
+        num_elements += 1
+    return num_elements
+
+def display_detection(image_tensor, class_names, threshold, prediction):
+    """
+    utilility to display image & prediction
+    input:  image - EagerTensor
+            class names - dict {class id: b'name'}
+            threshold - 0.0 - 1.0  (keep if score > threshold)
+            prediction - model response for this instance
+    """
+    # post processed prediction
+    # - without the threshold applied
+    detect_scores = np.asarray(prediction['detection_scores'], dtype=np.float32)
+    detect_classes = np.asarray(prediction['detection_classes'], dtype=np.int8)
+    detect_boxes = np.asarray(prediction['detection_boxes'], dtype=np.float32)
+
+    # keep == w/ threshold applied
+    keep_idx = np.argwhere(detect_scores > threshold)
+    class_ids = detect_classes[keep_idx]
+    (obj_count, discard) = class_ids.shape
+    # get the class names you need to keep
+    obj_class_ids = class_ids.reshape(-1)
+    obj_class_names = []
+    for i in obj_class_ids:
+        obj_class_names.append(class_names[i])
+    obj_class_names = np.asarray(obj_class_names)
+    # get the bounding boxes you need to keep
+    bboxes = detect_boxes[keep_idx]
+
+    # just keep data from here on
+    image_decoded_tensor = tf.image.decode_jpeg(image_tensor)
+    image = image_decoded_tensor.numpy()
+    pil_image = Image.fromarray(image)
+    bb = bboxes.reshape(-1,4)
+    ymins = bb[:,0]
+    xmins = bb[:,1]
+    ymaxs = bb[:,2]
+    xmaxs = bb[:,3]
+
+    print ("detected:", obj_count, obj_class_names)
+
+    for idx in range(obj_count):
+        draw_bounding_box_on_image(pil_image,ymins[idx],xmins[idx], ymaxs[idx], xmaxs[idx],
+                color=STANDARD_COLORS[obj_class_ids[idx]], 
+                thickness=4, display_str_list=[obj_class_names[idx]],
+                use_normalized_coordinates=True)
+    display.display(pil_image)
