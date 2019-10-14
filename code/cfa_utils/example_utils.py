@@ -15,6 +15,9 @@ import tensorflow as tf
 
 
 from object_detection.utils.label_map_util import get_label_map_dict
+from object_detection.utils import ops as utils_ops
+from object_detection.utils.visualization_utils import STANDARD_COLORS
+from object_detection.utils.visualization_utils import draw_bounding_box_on_image
 
 from .gen_imagesets import gen_imageset_list
 
