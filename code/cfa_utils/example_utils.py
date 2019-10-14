@@ -273,7 +273,7 @@ def voc_to_tfrecord_file(image_dir,
         print ('     image count:', image_count, "  class_count:", class_dict)
     return 1
 
-def _parse_function(example_proto):
+def parse_function(example_proto):
     # Parse the input using the standard dictionary
     feature = tf.io.parse_single_example(example_proto, feature_obj_detect)
     return feature
