@@ -4,17 +4,20 @@
 
 you need a virtual environment (conda on SageMaker, I use virtualenvwrapper on my laptop)
 
-- tensorflow
+- tensorflow (v 1.14 hardcoded to use CUDA 10.0 object files)  
 - opencv-python
 - pillow
+- TensrRT - requies CUDA 10.0 or 10.2 (not 10.1 oddly) and the TF graph must be build w/ 1.14  
 
 There is a requirements.txt file
 
-TF 1.14  CUDA 10.0  
+TF 1.14  CUDA 10.0 - 
 TF 1.15  CUDA 10.1 - verified on SageMaker  (20200124)  
 TF 1.14  CUDA 10.2 - won't work!   TF 1.14 specifically looks for libcuda*10.0* object files  
 
-Docker
+### Docker
+grilledclub/cuda100-tf114:20200124  
+Host CUDA 10.2 - Docker:  TF 1.14  CUDA 10.0 - Verified 
 
 
 
