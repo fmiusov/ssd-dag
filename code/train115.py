@@ -148,6 +148,8 @@ def main(unused_argv):
   predict_input_fn = train_and_eval_dict['predict_input_fn']
   train_steps = train_and_eval_dict['train_steps']
 
+  print ('checkpoint_dir:', FLAGS.checkpoint_dir)
+
   if FLAGS.checkpoint_dir:
     if FLAGS.eval_training_data:
       name = 'training_data'
@@ -165,6 +167,7 @@ def main(unused_argv):
       model_lib.continuous_eval(estimator, FLAGS.checkpoint_dir, input_fn,
                                 train_steps, name)
   else:
+    print ('- creating train_spec & eval_spec')
     train_spec, eval_specs = model_lib.create_train_and_eval_specs(
         train_input_fn,
         eval_input_fns,
@@ -172,8 +175,8 @@ def main(unused_argv):
         predict_input_fn,
         train_steps,
         eval_on_train_data=False)
-
     # Currently only a single Eval Spec is allowed.
+    print ('- train & evaluate')
     tf.estimator.train_and_evaluate(estimator, train_spec, eval_specs[0])
 
 
