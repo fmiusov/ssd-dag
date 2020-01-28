@@ -118,16 +118,18 @@ def main(unused_argv):
   
   
 
-  if tf.__version__ == '1.14':
+  if tf.__version__.startswith('1.14'):
       tf.enable_eager_execution()        
       tf.set_random_seed(0)
       tf.logging.set_verbosity(tf.logging.ERROR)
-  elif tf.__version__ == '1.15':   
+  elif tf.__version__.startswith('1.15'):   
       tf.compat.v1.enable_eager_execution()        
       tf.compat.v1.set_random_seed(0)
-      tf.compat.v1.logging.set_verbosity(tf.logging.ERROR)
+      tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
   else:
-      print (" **** unknown TF version:", tf__version__)
+      print (" **** unknown TF version:", tf.__version__)
+
+  print ('- creating Estimator -')
 
   # Creates `Estimator`, input functions, and steps
   train_and_eval_dict = model_lib.create_estimator_and_inputs(
@@ -176,4 +178,11 @@ def main(unused_argv):
 
 
 if __name__ == '__main__':
-  tf.app.run()
+      if tf.__version__.startswith('1.14'):
+            tf.app.run()
+      elif tf.__version__.startswith('1.15'):   
+            tf.compat.v1.app.run()
+      else:
+            print (" **** unknown TF version:", tf.__version__)
+
+  
