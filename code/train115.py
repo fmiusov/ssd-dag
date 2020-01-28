@@ -177,6 +177,7 @@ def main(unused_argv):
         eval_on_train_data=False)
     # Currently only a single Eval Spec is allowed.
     print ('- train & evaluate')
+    print ('- IF YOU GET NOTHING AFTER THIS, verify num_training_steps > largest checkpoint in /model')
     tf.estimator.train_and_evaluate(estimator, train_spec, eval_specs[0])
 
 
