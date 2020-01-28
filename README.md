@@ -11,7 +11,10 @@ you need a virtual environment (conda on SageMaker, I use virtualenvwrapper on m
 
 There is a requirements.txt file
 
-TF 1.14  CUDA 10.0 - 
+-- VERIFIED --
+XPS8100
+TF 1.14  CUDA 10.0 - failed 
+   AttributeError: 'ParallelInterleaveDataset' object has no attribute '_flat_structure'
 TF 1.15  CUDA 10.1 - verified on SageMaker  (20200124)  
 TF 1.14  CUDA 10.2 - won't work!   TF 1.14 specifically looks for libcuda*10.0* object files  
 
