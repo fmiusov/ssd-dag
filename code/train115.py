@@ -122,7 +122,7 @@ def main(unused_argv):
       tf.enable_eager_execution()        
       tf.set_random_seed(0)
       tf.logging.set_verbosity(tf.logging.ERROR)
-  else if tf.__version__ == '1.15':   
+  elif tf.__version__ == '1.15':   
       tf.compat.v1.enable_eager_execution()        
       tf.compat.v1.set_random_seed(0)
       tf.compat.v1.logging.set_verbosity(tf.logging.ERROR)
