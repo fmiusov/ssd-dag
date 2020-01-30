@@ -76,7 +76,7 @@ rm ${TFLITE_DIR} -rf
 
 # is the checkpoint (raw graph) there?
 echo "-- check for model checkpoint (the raw graph):", $TRAINED_MODEL_DIR, $ckpt_number
-ls $TRAINED_MODEL_DIR/*$ckpt_number*
+ls $TRAINED_DIR/*$ckpt_number*
 
 
 # - we don't think labels.txt is used, so don't copy it
