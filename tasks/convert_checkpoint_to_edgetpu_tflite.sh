@@ -33,6 +33,7 @@ echo $PYTHONPATH
 export INPUT_TENSORS='normalized_input_image_tensor'
 export OUTPUT_TENSORS='TFLite_Detection_PostProcess,TFLite_Detection_PostProcess:1,TFLite_Detection_PostProcess:2,TFLite_Detection_PostProcess:3'
 
+
 # Exit script on error.
 set -e
 # Echo each command, easier for debugging.
@@ -67,8 +68,16 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+
 rm ${TENSORFLOW_DIR} -rf
 rm ${TFLITE_DIR} -rf
+
+# test before you run -- this gets confusing going between platforms
+
+# is the checkpoint (raw graph) there?
+echo "-- check for model checkpoint (the raw graph):", $TRAINED_MODEL_DIR, $ckpt_number
+ls $TRAINED_MODEL_DIR/*$ckpt_number*
+
 
 # - we don't think labels.txt is used, so don't copy it
 # - this code can be deleted - if everything runs :)
