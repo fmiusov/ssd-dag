@@ -183,7 +183,7 @@ if __name__ == '__main__':
                 if args.display == 'gtk':
                     cv2.namedWindow('Object Detect')
                     image = cv2.cvtColor(inference_image, cv2.COLOR_RGB2BGR)
-                    cv2.imshow('Object Detect', image)
+                    cv2.imshow('Object Detect', cv2.resize(image, (640,480)))
                     cv2.waitKey(0)
                 elif args.display == 'None':
                     pass

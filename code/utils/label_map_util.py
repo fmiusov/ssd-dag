@@ -143,5 +143,11 @@ def get_label_map_dict(label_map_path, key):
       label_map_dict[item.name] = item.id
   else:
     for item in label_map.item:
-      label_map_dict[item.id] = item.name
+      try:
+        label_map_dict[item.id] = item.display_name
+      except:
+        try:
+          label_map_dict[item.id] = item.name
+        except:
+          print ("*** label_map_util - bad label_map pbtext", item)
   return label_map_dict

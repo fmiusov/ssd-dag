@@ -2,18 +2,20 @@ import cv2
 from utils.utils import load_image_into_numpy_array
 
 BBOX_COLOR = list(
-                ((80,80,80),
-                (0,120,120),
-                (120,120,0),
-                (120,0,0),
-                (0,120,0),
-                (0,0,120),
-                (255,0,0),
-                (0,255,0),
-                (0,0,255),
-                (102,0,204),
-                (255,102,102),
-                (0,0,128))
+                (
+                    (80,80,80),
+                    (0,120,120),
+                    (120,120,0),
+                    (120,0,0),
+                    (0,120,0),
+                    (0,0,120),
+                    (255,0,0),
+                    (0,255,0),
+                    (0,0,255),
+                    (102,0,204),
+                    (255,102,102),
+                    (0,0,128)
+                )
             )
 
 
@@ -61,7 +63,9 @@ def inference_to_image(model_type, logger,
                     logger.info("      class: {}-{} prob: {}  bbox: ({},{}), ({},{})".format(
                         class_id, label_dict[class_id], prob_array[i], xmin, ymin, xmax, ymax))
                     # draw the bbox - get the color from global color list
-                    cv2.rectangle(orig_image, (xmin,ymin), (xmax, ymax), color=BBOX_COLOR[class_id],thickness=2)
+                    # limited colors defined
+                    bbox_color_id = class_id % 12
+                    cv2.rectangle(orig_image, (xmin,ymin), (xmax, ymax), color=BBOX_COLOR[bbox_color_id],thickness=2)
                     # write the class name on the box
                     cv2.putText(orig_image, "{} - {:.2f}".format(label_dict[class_id], prob_array[i]), 
                         (xmin, ymin), cv2.FONT_HERSHEY_PLAIN, 1, (0,255,0))
