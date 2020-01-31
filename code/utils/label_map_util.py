@@ -128,8 +128,10 @@ def load_labelmap(path):
 
 
 def get_label_map_dict(label_map_path, key):
-  """Reads a label map and returns a dictionary of label names to id.
-
+  """
+  Reads a label map and returns a dictionary of label names to id.
+   it will try to use display_name from pbtxt first
+   if not found it will use name
   Args:
     label_map_path: path to label_map.
 
@@ -143,11 +145,17 @@ def get_label_map_dict(label_map_path, key):
       label_map_dict[item.name] = item.id
   else:
     for item in label_map.item:
+      # not sure if item.display_name is in the pbtxt
+      # - sometimes only name is there
+      # - give preference to display_name (important with mscoco)
       try:
         label_map_dict[item.id] = item.display_name
       except:
+        # evidently, display.name wasn't there
+        # fall back to name
         try:
           label_map_dict[item.id] = item.name
         except:
+          # this is bad - this means your label map didn't have either
           print ("*** label_map_util - bad label_map pbtext", item)
   return label_map_dict
