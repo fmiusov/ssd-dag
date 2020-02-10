@@ -7,7 +7,7 @@ you need a virtual environment (conda on SageMaker, I use virtualenvwrapper on m
 - tensorflow (v 1.14 hardcoded to use CUDA 10.0 object files)  
 - opencv-python
 - pillow
-- TensrRT - requies CUDA 10.0 or 10.2 (not 10.1 oddly) and the TF graph must be build w/ 1.14  
+- (Don't at this time-future, maybe) TensorRT - requies CUDA 10.0 or 10.2 (not 10.1 oddly) and the TF graph must be build w/ 1.14  
 
 There is a requirements.txt file
 
