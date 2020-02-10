@@ -1,6 +1,10 @@
 import cv2
 from utils.utils import load_image_into_numpy_array
 
+# TODO
+# limit custom code - checkout utilities
+# https://github.com/tensorflow/models/blob/master/research/object_detection/utils/visualization_utils.py
+
 BBOX_COLOR = list(
                 (
                     (80,80,80),
