@@ -68,7 +68,9 @@ def get_image_list(image_dir):
 def send_image_to_model(logger, image_filepath, preprocessed_image, interpreter):
     # model inference
     start_time = time.time()
+    input_details = interpreter.get_input_details()
     # input (image) is (1,300,300,3) - shaped like a batch of size 1
+   
     interpreter.set_tensor(input_details[0]['index'], preprocessed_image)    # model input is a batch of images
     interpreter.invoke()        # this invokes the model, creating output data
 
@@ -84,7 +86,6 @@ def send_image_to_model(logger, image_filepath, preprocessed_image, interpreter)
     logger.info("time spent: {:.4f}".format(finish_time - start_time))
 
     return bbox_data, class_data, prob_data
-
 
 
 if __name__ == '__main__':
